@@ -1,0 +1,35 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Plantilla de CloudFormation para crear una instancia EC2 con Ubuntu
+
+Resources:
+  UbuntuEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      ImageId: ami-04b9e92b5572fa0d1 # ID para Ubuntu Server 20.04 LTS (us-east-1, cambiar según la región)
+      KeyName: !Ref KeyPairName
+      SecurityGroups:
+        - !Ref InstanceSecurityGroup
+      Tags:
+        - Key: Name
+          Value: UbuntuInstance
+
+  InstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Seguridad para la instancia EC2 Ubuntu
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+
+  KeyPairName:
+    Type: AWS::EC2::KeyPair
+    Properties:
+      KeyName: UbuntuKeyPair
+
+Outputs:
+  InstancePublicIP:
+    Description: Dirección IP pública de la instancia EC2 Ubuntu
+    Value: !GetAtt UbuntuEC2Instance.PublicIp
