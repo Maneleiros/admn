@@ -1,0 +1,33 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Plantilla de CloudFormation para crear una instancia EC2
+
+Resources:
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      ImageId: ami-0e2c8caa4b6378d8c # Cambiar según la región
+      KeyName: vockey
+      SecurityGroups:
+        - !Ref InstanceSecurityGroup
+      Tags:
+        - Key: Name
+          Value: MyEC2Instance2
+
+  InstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Seguridad para la instancia EC2
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 20
+          ToPort: 20
+          CidrIp: 0.0.0.0/0
+Outputs:
+  InstancePublicIP:
+    Description: Dirección IP pública de la instancia EC2
+    Value: !GetAtt EC2Instance.PublicIp
